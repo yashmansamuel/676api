@@ -30,10 +30,10 @@ app.add_middleware(
 # -----------------------------
 # Configuration
 # -----------------------------
-SUPABASE_URL = os.getenv("SUPABASE_URL", "https://ujclhweqqifgoiscvqmd.supabase.co")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY", "sb_publishable_soPYxakWGl9MTrzCjdjt2w_fR1jsVVf")
-CEREBRAS_API_KEY = os.getenv("CEREBRAS_API_KEY", "csk-r6x94tyk4xk9ky853jw33459t84ddtxx8ked68829dd2d24f")
-ADMIN_SECRET_PASS = "signaturesi_boss_786"
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+CEREBRAS_API_KEY = os.getenv("CEREBRAS_API_KEY")
+ADMIN_SECRET_PASS = os.getenv("ADMIN_SECRET_PASS")
 
 # -----------------------------
 # Clients Initialization
@@ -134,3 +134,4 @@ async def chat_proxy(request: Request, authorization: str = Header(None)):
     except Exception as e:
         logger.error(f"Cerebras API Error: {e}")
         raise HTTPException(status_code=500, detail="Neo L1.0 Inference Failed")
+handler = app
