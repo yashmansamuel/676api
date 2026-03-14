@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+supabase
+cerebras-cloud-sdk
+httpx
+python-dotenv
