@@ -1,12 +1,13 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "main.py", "use": "@vercel/python" },
-    { "src": "dashboard.html", "use": "@vercel/static" }
-  ],
+  "functions": {
+    "api/index.py": {
+      "runtime": "python3.11"
+    }
+  },
   "routes": [
-    { "src": "/v1/(.*)", "dest": "/main.py" },
-    { "src": "/", "dest": "/dashboard.html" },
-    { "src": "/dashboard", "dest": "/dashboard.html" }
+    {
+      "src": "/(.*)",
+      "dest": "api/index.py"
+    }
   ]
 }
