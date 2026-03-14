@@ -5,6 +5,7 @@ import string
 from fastapi import FastAPI, Request, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
 from supabase import create_client, Client
 from cerebras.cloud.sdk import Cerebras
 
@@ -20,7 +21,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # frontend server origin
+    allow_origins=["*"],  # allow all origins for testing
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -43,6 +44,13 @@ try:
     logger.info("Signaturesi Backend: Neo L1.0 Engine Connected Successfully.")
 except Exception as e:
     logger.error(f"Initialization Error: {e}")
+
+# -----------------------------
+# Request Model
+# -----------------------------
+class GenerateKeyRequest(BaseModel):
+    tokens: int = 0
+    admin_pass: str
 
 # -----------------------------
 # 1. Dashboard Route
@@ -77,16 +85,16 @@ async def get_balance(api_key: str):
 # 3. Admin Generate API Key
 # -----------------------------
 @app.post("/admin/generate-key")
-async def generate_key(tokens: int = 0, admin_pass: str = ""):
-    if admin_pass != ADMIN_SECRET_PASS:
+async def generate_key(req: GenerateKeyRequest):
+    if req.admin_pass != ADMIN_SECRET_PASS:
         raise HTTPException(status_code=403, detail="Unauthorized")
     
     random_part = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(16))
     new_key = f"sig-live-{random_part}"
     
-    supabase.table("users").insert({"api_key": new_key, "token_balance": tokens}).execute()
+    supabase.table("users").insert({"api_key": new_key, "token_balance": req.tokens}).execute()
     
-    return {"new_api_key": new_key, "tokens": tokens}
+    return {"new_api_key": new_key, "tokens": req.tokens}
 
 # -----------------------------
 # 4. Chat Endpoint (Neo L1.0)
