@@ -1,6 +1,4 @@
 fastapi
-uvicorn
 supabase
+pydantic
 cerebras-cloud-sdk
-httpx
-python-dotenv
